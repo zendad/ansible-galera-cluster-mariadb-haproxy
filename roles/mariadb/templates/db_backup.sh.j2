@@ -1,0 +1,56 @@
+#!/bin/sh
+
+BACKCMD=mariabackup
+BACKUPDIR={{ mariadb_backup_dir }}
+START=`date +%s`
+TARGETDIR=$BACKUPDIR/`date +%F_%H-%M-%S`
+DATETIME=$(date +%Y%m%d)
+LOCKFILE=/tmp/db.lock
+
+## Check if script is running
+if [ -f $LOCKFILE ]; 
+then
+   echo "Already Running"
+   exit 1
+fi
+
+echo "MariaDB backup"
+echo "started: `date`"
+echo
+
+echo "Check if $BACKUPDIR directory exists"
+if test ! -d $BACKUPDIR
+then
+  mkdir -p $BACKUPDIR
+  echo "directory does not exist: Created $BACKUPDIR"
+else
+  echo "directory exists: Using $BACKUPDIR"
+fi
+
+echo "Check if $TARGETDIR directory exists"
+if test ! -d $TARGETDIR
+then
+  mkdir -p $TARGETDIR
+  echo "directory does not exist: Created $TARGETDIR"
+else
+  echo "directory exists: Using $TARGETDIR"
+fi
+
+# Create a new full backup
+$BACKCMD --backup --compress --extra-lsndir=$TARGETDIR --stream=xbstream | gzip > $TARGETDIR/db_backup.$DATETIME.gz
+
+echo "Cleaning up backups older than 5 days"
+# Delete old backups
+for DEL in `find $BACKUPDIR -mindepth 1 -maxdepth 1 -type d -ctime +5 -printf "%P\n"`
+do
+  echo "deleting $DEL"
+  rm -rf $BACKUPDIR/$DEL
+done
+
+
+SPENT=$((`date +%s` - $START))
+echo
+echo "took $SPENT seconds"
+echo "completed: `date`"
+rm -rf LOCKFILE
+exit 0

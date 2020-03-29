@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+
+[galera]
+skip-name-resolve=1
+transaction-isolation = REPEATABLE-READ
+character-set-server={{ mariadb_character_set_server }}
+collation-server={{ mariadb_collation_server }}
+binlog_format=ROW
+
+max_connections={{ mariadb_db_connections }}
+default-storage-engine={{ mariadb_cluster_default_storage_engine }}
+innodb_autoinc_lock_mode=2
+innodb_locks_unsafe_for_binlog=1
+datadir={{ mariadb_data_dir }}
+innodb_buffer_pool_size={{ ansible_memtotal_mb // 2 }}M
+innodb_log_buffer_size=512M
+innodb_buffer_pool_instances=1
+innodb_log_file_size=100M
+innodb_file_per_table=1
+innodb_flush_log_at_trx_commit=2
+innodb_open_files=400
+innodb_io_capacity=400
+wsrep_on=ON
+{% if mariadb_version == 10.4 %}
+wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
+{% else %}
+wsrep_provider=/usr/lib64/galera/libgalera_smm.so
+{% endif %} 
+wsrep_cluster_address="gcomm://{{ groups["database"] | join(",") }}"
+wsrep_cluster_name="{{ mariadb_cluster_wsrep_cluster_name }}"
+wsrep_node_address="{{ ansible_default_ipv4.address }}"
+wsrep_node_name="{{ ansible_nodename }}"
+wsrep_sst_method=rsync
+wsrep_sst_auth={{ galera_cluster_user }}:{{ galera_cluster_user_password }}
+{% if galera_donornode_enabled %}
+# Donor Node.
+wsrep_sst_donor={{ groups["donornode"] }}"
+{% endif %}

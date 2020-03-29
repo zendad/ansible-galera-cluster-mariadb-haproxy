@@ -1,0 +1,12 @@
+---
+# tasks file for mariadb role
+
+# Setup/install mariadb.
+- include: install-mariadb.yml
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+  
+# Configure MariaDB.
+- include: secure-mariadb.yml
+- include: backup-cron.yml
+
+

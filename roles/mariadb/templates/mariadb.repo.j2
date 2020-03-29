@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+# MariaDB 10.3 CentOS repository list - created 2020-03-28 20:05 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/{{ mariadb_version }}/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1

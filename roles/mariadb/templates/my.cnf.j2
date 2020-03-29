@@ -1,0 +1,39 @@
+[client]
+port = {{ mariadb_port }}
+socket = {{ mariadb_socket }}
+
+[mysqld]
+user                    = {{ mariadb_daemon_user }}
+datadir                 = {{ mariadb_data_dir }}
+port                    = {{ mariadb_port }}
+socket                  = {{ mariadb_socket }}
+pid-file                = {{ mariadb_pid }}
+log_error               = {{ mariadb_log_file }}
+lower-case-table-names  = 1
+{% if mariadb_slow_query_log_enabled %}
+# Slow query log configuration.
+slow_query_log          = 1
+slow_query_log_file     = {{ mariadb_slow_query_log_file }}
+long_query_time         = {{ mariadb_slow_query_time }}
+{% endif %}
+max_connections         = 200
+connect_timeout         = 5
+wait_timeout            = 600
+max_allowed_packet      = 16M
+thread_cache_size       = 128
+sort_buffer_size        = 4M
+bulk_insert_buffer_size = 16M
+tmp_table_size          = 32M
+max_heap_table_size     = 32M
+query_cache_size        = 0
+query_cache_type        = 0
+skip-networking         = 0
+bind-address            = {{ mariadb_bind_address }}
+[mysqldump]
+quick
+max_allowed_packet = {{ mariadb_mysqldump_max_allowed_packet }}
+[client-server]
+#
+# include all files from the config directory
+#
+!includedir {{ mariadb_config_dir }}

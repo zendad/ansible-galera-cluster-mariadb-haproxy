@@ -1,0 +1,21 @@
+---
+# vars file for mariadb role
+mariadb_version: 10.4
+mariadb_daemon_user: mysql
+mariadb_config_dir: /etc/my.cnf.d/
+mariadb_socket: /var/run/mariadb/mysql.sock
+mariadb_pid: /var/run/mariadb/mysql.pid
+mariadb_log_file: /var/log/mariadb/mariadb.log
+mariadb_pid_dir: /var/run/mariadb
+mariadb_log_dir: /var/log/mariadb
+mariadb_port: 3306
+mariadb_db_connections: 200
+
+# Slow query log settings.
+mariadb_slow_query_log_enabled: no
+mariadb_slow_query_log_file: /var/log/mariadb/mariadb-slow.log
+mariadb_slow_query_time: 2
+mariadb_mysqldump_max_allowed_packet: 64M
+
+# Donor Node
+galera_donornode_enabled: no

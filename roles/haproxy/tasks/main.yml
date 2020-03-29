@@ -1,0 +1,35 @@
+---
+# tasks file for haproxy role
+
+- name: Install HAProxy 
+  yum:
+    state: latest
+    name: haproxy
+
+- name: Copy HAProxy config file
+  template:
+    src: templates/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: enable HAProxy http port access
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+    immediate: true 
+
+- name: Open mariadb HAProxy port on firewall
+  firewalld:
+    permanent: yes
+    immediate: yes
+    state: enabled
+  with_items:
+    - "{{ haproxy_port }}/tcp"
+
+- name: Start HAProxy 
+  service:
+    name: haproxy
+    state: started
+    enabled: yes
+
+

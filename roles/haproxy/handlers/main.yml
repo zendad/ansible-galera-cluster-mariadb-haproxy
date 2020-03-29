@@ -1,0 +1,9 @@
+---
+# handlers file for haproxy role
+- name: Ensure haproxy is started and enabled on boot.
+  service:
+    name: haproxy
+    enabled: yes
+- name: restart mariadb
+  service: name=haproxy state=restarted
+

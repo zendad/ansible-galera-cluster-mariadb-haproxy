@@ -1,0 +1,18 @@
+# tasks file to setup db backup cronjob
+# backup script
+- name: Adding backup script.
+  template:
+    src: db_backup.sh.j2
+    dest: "{{ mariadb_cronjob }}"
+    owner: root
+    group: root
+    mode: 0755
+
+# Activate mariadb backup cronjob   
+- name: Activate mariadb backup cronjob
+  cron:
+    name: "mariadb backup"
+    minute: "{{ mariadb_cron_minute }}"
+    hour: "{{ mariadb_cron_hour }}"
+    job: "{{ mariadb_cronjob }} > {{ mariadb_cronjob_logs }} 2>&1"
+

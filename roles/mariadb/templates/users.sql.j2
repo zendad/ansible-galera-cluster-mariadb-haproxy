@@ -1,0 +1,1 @@
+ select  concat("SET PASSWORD FOR '",user,"'@'",host,"' =PASSWORD('{{mariadb_root_password}}');") FROM mysql.user WHERE user not in ('mysql');

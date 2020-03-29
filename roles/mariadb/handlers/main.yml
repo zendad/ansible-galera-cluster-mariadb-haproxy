@@ -1,0 +1,9 @@
+---
+# handlers file for mariadb role
+- name: Ensure MariaDB is started and enabled on boot.
+  service:
+    name: "{{ mariadb_daemon }}"
+    enabled: yes
+- name: restart mariadb
+  service: name={{ mariadb_daemon }} state=restarted
+

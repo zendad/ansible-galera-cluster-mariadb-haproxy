@@ -1,0 +1,42 @@
+---
+# defaults file for mariadb role
+mariadb_repo: "True"
+mariadb_root_username: root
+mariadb_root_password: "{{ mariadb_password }}"
+mariadb_default_data_dir: /var/lib/mysql
+mariadb_sql_file: /tmp/users.sql
+mariadb_sql_file_output: /tmp/users_out.sql
+mariadb_users:
+  - name: "appuser"
+    password: "{{ mariadb_password }}"
+    priv: "*.*:ALL,GRANT"
+  - name: "replicator"
+    password: "{{ mariadb_password }}"
+    priv: "*.*:ALL,GRANT"
+mariadb_databases:
+  - name: demodb
+    encoding: utf8
+    collation: utf8_general_ci
+  - name: demodb3
+    encoding: utf8
+    collation: utf8_general_ci
+galera_cluster_user: replicator
+galera_cluster_user_password: "{{ mariadb_password }}"
+mariadb_cluster_wsrep_cluster_name: galera-cluster-01
+mariadb_data_dir: /var/lib/mariadb
+mariadb_bind_address: 0.0.0.0
+mariadb_cluster_default_storage_engine: InnoDB
+mariadb_character_set_server: utf8
+mariadb_collation_server: utf8_general_ci
+
+
+#Packages and Daemon user
+mariadb_daemon: mariadb
+mariadb_packages:
+  - MariaDB-server 
+  - MariaDB-client
+  - MariaDB-shared 
+  - MariaDB-backup 
+  - MariaDB-common
+  - MySQL-python
+  - rsync

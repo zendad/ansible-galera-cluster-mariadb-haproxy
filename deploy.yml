@@ -1,0 +1,13 @@
+- name: install mariadb custer with haproxy for HA
+  hosts: database
+  become: yes
+
+  roles:
+    - mariadb
+    - haproxy
+
+#- name: haproxy on its own server
+#  hosts: haproxy
+
+#  roles:
+#    - role: haproxy
